@@ -1,4 +1,4 @@
-\documentclass[times, utf8, seminar]{fer}
+\documentclass[times, utf8, seminar, numeric]{fer}
 
 \usepackage{booktabs}
 \usepackage{hyperref}
@@ -22,11 +22,25 @@
 
 \chapter{Uvod}
 
+\textit{Sybil} napadi \engl{Sybil attacks} su dobro poznata vrsta napada u distribuiranim sustavima poput senzorskih i \textit{peer-to-peer} mreža. U osnovnom obliku ovog napada napadač stori velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Broj identiteta koji napadač može stvoriti ovisi o napadačevim resursima kao što su propusnost mreže, memorija i računarna moć. \cite{friends}
+
 \chapter{Grafovi društvenih mreža}
 
 \chapter{Sybil napadi}
 
+\section{Središnji autoritet}
+Sybil napadi mogu se lagano kontrolirati pomoću pouzdranog središnjeg autoriteta koji izdaje i provjerava podatke jedinstvene stvarnom čovjeku. Na primjer, ako sustav zahtijeva registraciju korisnika pomoću broja osobne iskaznice ili vozačke dozvole, onda prepreka za sybil napade postaje puno viša. Autoritet također može zahtijevati i plaćanje za registraciju. Nažalost, postoje mnogi slučajevi gdje takvi sustavi nisu poželjni. Na primjer, može biti teško izabrati jedinstveni autoritet kome mogu vjerovati svi korisnici na svijetu. Nadalje, taj središnji autoritet može lako postati točka zatajenja \engl{single point of failure} -- meta \textit{denial-of-service} napada ili usko grlo u izvođenju sustava. Na poslijetku, plaćanje registracije ili traženje osjetljivih informacija prilikom iste odbilo bi velik broj korisnika. Jedini način da se ovi problemi izbjegnu je distribuiranost sustava za provjeru. \cite{sybil-guard}
+
+\section{Izazovi u decentraliziranim pristupima}
+Obrana od sybil napada bez puzdanog središnjeg autoriteta puno je teža. Puno decentraliziranih sustava pokušavalo se boriti protiv sybil napada povezivanjem identiteta korisnika s IP adresom. No, napadačima još tada korištenjem određenih metoda nije bio problem ukrasti i iskoristiti veći broj IP adresa s kojih mogu djelovati. \cite{spammers} Osim krađe IP adresa, napadač može preuzeti veći broj korisničkih računala tako stvarajući \textit{botnet} sačinjen od tisuća računala diljem svijeta. Mnogi drugi decentralizirani načini obrane također su se pokazali neuspješnima. Primjerice zagonetke koje zahtijevaju ljudski napor, kao što je \textit{CAPTCHA}, napadač može upotrijebiti na svojoj stranici tražeći od korisnika njegove stranice da ih riješe. Sve to vodi do zaključka kako se obrana od napada ne može temeljiti na jednokratnim provjerama prilikom registracije korisnika na sustav, već temeljitom analizom grafa društvene mreže temeljene na raznim algoritamskim svojstvima grafa.
+
 \chapter{Zaštita od sybil napada}
+
+\section{Slučajne šetnje}
+
+\section{Strukturna svojstva grafova društvenih mreža}
+
+\chapter{Postojeća rješenja}
 
 \chapter{Zaključak}
 
