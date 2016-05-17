@@ -23,6 +23,8 @@
 \chapter{Uvod}
 \textit{Sybil} napadi \engl{Sybil attacks} su dobro poznata vrsta napada u distribuiranim sustavima poput senzorskih i \textit{peer-to-peer} mreža. U osnovnom obliku ovog napada napadač stori velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Broj identiteta koji napadač može stvoriti ovisi o napadačevim resursima kao što su propusnost mreže, memorija i računarna moć.
 
+%TODO: Napiši poglavlje
+
 \chapter{Sybil napadi}
 \begin{figure}[h]
 	\centering
@@ -31,7 +33,10 @@
 	\label{fig:attack}
 \end{figure}
 
+%TODO: uvod u poglavlje
+
 \section{Povijest i motivacija}
+%TODO: uvod u odjeljak
 
 \subsection{Središnji autoritet}
 Sybil napadi mogu se lagano kontrolirati pomoću pouzdranog središnjeg autoriteta koji izdaje i provjerava podatke jedinstvene stvarnom čovjeku. Na primjer, ako sustav zahtijeva registraciju korisnika pomoću broja osobne iskaznice ili vozačke dozvole, onda prepreka za sybil napade postaje puno viša. Autoritet također može zahtijevati i plaćanje za registraciju. Nažalost, postoje mnogi slučajevi gdje takvi sustavi nisu poželjni. Na primjer, može biti teško izabrati jedinstveni autoritet kome mogu vjerovati svi korisnici na svijetu. Nadalje, taj središnji autoritet može lako postati točka zatajenja \engl{single point of failure} -- meta \textit{denial-of-service} napada ili usko grlo u izvođenju sustava. Na poslijetku, plaćanje registracije ili traženje osjetljivih informacija prilikom iste odbilo bi velik broj korisnika. Jedini način da se ovi problemi izbjegnu je distribuiranost sustava za provjeru. \cite{sybil-guard}
@@ -40,6 +45,7 @@ Sybil napadi mogu se lagano kontrolirati pomoću pouzdranog središnjeg autorite
 Obrana od sybil napada bez puzdanog središnjeg autoriteta puno je teža. Puno decentraliziranih sustava pokušavalo se boriti protiv sybil napada povezivanjem identiteta korisnika s IP adresom. No, napadačima još tada korištenjem određenih metoda nije bio problem ukrasti i iskoristiti veći broj IP adresa s kojih mogu djelovati. \cite{spammers} Osim krađe IP adresa, napadač može preuzeti veći broj korisničkih računala tako stvarajući \textit{botnet} sačinjen od tisuća računala diljem svijeta. Mnogi drugi decentralizirani načini obrane također su se pokazali neuspješnima. Primjerice zagonetke koje zahtijevaju ljudski napor, kao što je \textit{CAPTCHA}, napadač može upotrijebiti na svojoj stranici tražeći od korisnika njegove stranice da ih riješe. Sve to vodi do zaključka kako se obrana od napada ne može temeljiti na jednokratnim provjerama prilikom registracije korisnika na sustav, već na temeljitoj analizi grafa društvene mreže te ispitivanju na raznih algoritamskih svojstava grafa. \cite{sybil-guard}
 
 \section{Pojmovi i definicije}
+%TODO: uvod u odjeljak
 
 \subsection{Model sustava}
 Društvena mreža promatra se kao neusmjereni beztežinski graf $G = (V, E)$. Čvorovi predstavljaju korisnike mreže, a bridovi određenu vrstu odnosa između korisnika. Vrijedi $|V| = n, V = {v_1, v_2, ..., v_n}$ te $|E| = m$, gdje je $e_{ij} \in E$ tj. $v_i \to v_j$ ako je $v_i \in V$ susjedan $v_j \in V$, za $1 \leq i, j \leq n$. Matrica $A = [a_{ij}]^{n \times n}$ naziva se matrica susjedstva gdje je $a_{ij} = 1$ ako je $e_{ij} \in E$ i $a_{ij} = 0$ ako nije. Matrica $P = [p_{ij}]^{n \times n}$ naziva se matrica prijelaza \engl{transition matrix}
@@ -67,7 +73,7 @@ Uz pomoć prethodnog teorema može se dokazati da je vrijeme miješanja u korela
 \chapter{Obrana od sybil napada}
 
 \section{Pretpostavke}
-Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama \cite{sybil-defender}:
+Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za koje se pokazalo da vrijede u stvarnim društvenim mrežama \cite{sybil-defender}:
 
 \textbf{Poštena regija je brzo miješajuća.} Kao što je definirano u prethodnom poglavlju, to znači da vrijedi $T(\epsilon) = O(\log n)$, za funkciju vremena miješanja definiranu prema jednadžbi \ref{eq:mixing}. Slučajne šetnje u brzo miješajućim grafovima općenito brzo konvergiraju ka stacionarnoj distribuciji. \cite{sybil-defender} Pokazano je da su stvarne društvene mreže brzo miješajuće. \cite{sybil-limit}
 
@@ -79,13 +85,12 @@ Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama \cite
 
 \textbf{Broj napadačkih bridova je ograničen.} Kao posljedica, kada napadač stvori veći broj sybil čvorova, postojat će nepropocijonalno mali \textit{rez} (rezni skup) između poštene i sybil regije. Postojanje malog reza narušava svojstvo brzog miješanja: miješanje između poštenih čvorova je brzo, dok je miješanje između poštenih i sybil čvorova sporo.
 
-\section{Slučajne šetnje}
-
-\section{Strukturna svojstva grafova društvenih mreža}
-
-\chapter{Postojeća rješenja}
+\section{Algoritam}
+Cjelokupni algoritam sastoji se od tri komponente: algoritma za identifikaciju sybil čvorova, algoritma za detekciju sybil grupa te dva pristupa ograničavanju broja napadačkih bridova. Tri se komponente mogu koristiti u konjunkciji za što bolju obranu.
+%TODO: nastavak
 
 \chapter{Zaključak}
+%TODO: Napiši poglavlje
 
 \bibliography{literatura}
 \bibliographystyle{fer}
