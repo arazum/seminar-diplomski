@@ -21,18 +21,48 @@
 \tableofcontents
 
 \chapter{Uvod}
-
-\textit{Sybil} napadi \engl{Sybil attacks} su dobro poznata vrsta napada u distribuiranim sustavima poput senzorskih i \textit{peer-to-peer} mreža. U osnovnom obliku ovog napada napadač stori velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Broj identiteta koji napadač može stvoriti ovisi o napadačevim resursima kao što su propusnost mreže, memorija i računarna moć. \cite{friends}
-
-\chapter{Grafovi društvenih mreža}
+\textit{Sybil} napadi \engl{Sybil attacks} su dobro poznata vrsta napada u distribuiranim sustavima poput senzorskih i \textit{peer-to-peer} mreža. U osnovnom obliku ovog napada napadač stori velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Broj identiteta koji napadač može stvoriti ovisi o napadačevim resursima kao što su propusnost mreže, memorija i računarna moć.
 
 \chapter{Sybil napadi}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{attack.png}
+	\caption{Napadački bridovi u grafu društvene mreže}
+	\label{fig:attack}
+\end{figure}
 
-\section{Središnji autoritet}
+\section{Povijest i motivacija}
+
+\subsection{Središnji autoritet}
 Sybil napadi mogu se lagano kontrolirati pomoću pouzdranog središnjeg autoriteta koji izdaje i provjerava podatke jedinstvene stvarnom čovjeku. Na primjer, ako sustav zahtijeva registraciju korisnika pomoću broja osobne iskaznice ili vozačke dozvole, onda prepreka za sybil napade postaje puno viša. Autoritet također može zahtijevati i plaćanje za registraciju. Nažalost, postoje mnogi slučajevi gdje takvi sustavi nisu poželjni. Na primjer, može biti teško izabrati jedinstveni autoritet kome mogu vjerovati svi korisnici na svijetu. Nadalje, taj središnji autoritet može lako postati točka zatajenja \engl{single point of failure} -- meta \textit{denial-of-service} napada ili usko grlo u izvođenju sustava. Na poslijetku, plaćanje registracije ili traženje osjetljivih informacija prilikom iste odbilo bi velik broj korisnika. Jedini način da se ovi problemi izbjegnu je distribuiranost sustava za provjeru. \cite{sybil-guard}
 
-\section{Izazovi u decentraliziranim pristupima}
-Obrana od sybil napada bez puzdanog središnjeg autoriteta puno je teža. Puno decentraliziranih sustava pokušavalo se boriti protiv sybil napada povezivanjem identiteta korisnika s IP adresom. No, napadačima još tada korištenjem određenih metoda nije bio problem ukrasti i iskoristiti veći broj IP adresa s kojih mogu djelovati. \cite{spammers} Osim krađe IP adresa, napadač može preuzeti veći broj korisničkih računala tako stvarajući \textit{botnet} sačinjen od tisuća računala diljem svijeta. Mnogi drugi decentralizirani načini obrane također su se pokazali neuspješnima. Primjerice zagonetke koje zahtijevaju ljudski napor, kao što je \textit{CAPTCHA}, napadač može upotrijebiti na svojoj stranici tražeći od korisnika njegove stranice da ih riješe. Sve to vodi do zaključka kako se obrana od napada ne može temeljiti na jednokratnim provjerama prilikom registracije korisnika na sustav, već temeljitom analizom grafa društvene mreže temeljene na raznim algoritamskim svojstvima grafa.
+\subsection{Izazovi u decentraliziranim pristupima}
+Obrana od sybil napada bez puzdanog središnjeg autoriteta puno je teža. Puno decentraliziranih sustava pokušavalo se boriti protiv sybil napada povezivanjem identiteta korisnika s IP adresom. No, napadačima još tada korištenjem određenih metoda nije bio problem ukrasti i iskoristiti veći broj IP adresa s kojih mogu djelovati. \cite{spammers} Osim krađe IP adresa, napadač može preuzeti veći broj korisničkih računala tako stvarajući \textit{botnet} sačinjen od tisuća računala diljem svijeta. Mnogi drugi decentralizirani načini obrane također su se pokazali neuspješnima. Primjerice zagonetke koje zahtijevaju ljudski napor, kao što je \textit{CAPTCHA}, napadač može upotrijebiti na svojoj stranici tražeći od korisnika njegove stranice da ih riješe. Sve to vodi do zaključka kako se obrana od napada ne može temeljiti na jednokratnim provjerama prilikom registracije korisnika na sustav, već na temeljitoj analizi grafa društvene mreže te ispitivanju na raznih algoritamskih svojstava grafa. \cite{sybil-guard}
+
+\section{Pojmovi i definicije}
+
+\subsection{Model sustava}
+Društvena mreža promatra se kao neusmjereni beztežinski graf $G = (V, E)$. Čvorovi predstavljaju korisnike mreže, a bridovi određenu vrstu odnosa između korisnika. Vrijedi $|V| = n, V = {v_1, v_2, ..., v_n}$ te $|E| = m$, gdje je $e_{ij} \in E$ tj. $v_i \to v_j$ ako je $v_i \in V$ susjedan $v_j \in V$, za $1 \leq i, j \leq n$. Matrica $A = [a_{ij}]^{n \times n}$ naziva se matrica susjedstva gdje je $a_{ij} = 1$ ako je $e_{ij} \in E$ i $a_{ij} = 0$ ako nije. Matrica $P = [p_{ij}]^{n \times n}$ naziva se matrica prijelaza \engl{transition matrix}
+\[ p_{ij} = 
+  \begin{cases}
+    \frac{1}{deg(v_i)} & e_{ij} \in E \\
+    0 & inace \\
+  \end{cases}
+\]
+gdje je $deg(v_i)$ stupanj čvora $v_i$. Skup susjeda čvora $v_i$ označava se s $N(v_i)$ tako da je $deg(v_i) = |N(v_i)|$.
+
+U mreži se nalazi određeni broj \textit{poštenih čvorova} \engl{honest nodes}, svaki sa svojim identitetom, koji predstavljaju stvarne korisnike mreže. Također postoji jedan ili više napadača u mreži, svaki s određenim brojem lažnih identiteta koji su u grafu predstavljeni \textit{sybil čvorovima}. Bridovi između sybil čvorova i poštenih čvorova nazivaju se \textit{napadački bridovi} \engl{attack edges}. \textit{Sybil regija} \engl{sybil region} sastoji se od svih sybil čvorova, a \textit{poštena regija} \engl{honest region} sastoji se od svih poštenih čvorova. Sve sybil čvorove kontrolira napadač. Stoga, napadač može stvoriti proizvoljan broj bridova unutar sybil regije.
+
+\subsection{Slučajne šetnje i vrijeme miješanja}
+Prijelaz između dva čvora u grafu može se prikazati markovljevim lancem (ML) koji predstavlja slučajnu štetnju kroz graf $G$. \textit{Slučajna šetnja} duljine $w$ preko $G$ je niz čvorova u $G$ koji počinje čvorom $v_i$ i završava čvorom $v_t$. ML je ergodičan \engl{ergodic} ako je ireducibilan i aperiodičan, što znači da ima stacionarnu distribuciju $\pi$ i distribucija poslije slučajne šetnje duljine $w$ konvergira prema $\pi$ kada $w \to \infty$. Stacionarna distribucija ML je distribucija koja je invarijantna s obrizorm na matricu prijelaza $P$ tj. $\pi P = \pi$. \textit{Vrijeme miješanja} \engl{mixing time} ML definira se kao najmanja duljina slučajne šetnje kojom se postiže stacionarna distribucija. Formalno i preciznije, ovu definiciju možemo izreći na sljedeći način:
+\[
+  T(\epsilon) = \max_{i} \min \{t : |\pi - \pi^{(i)} P^t|_1 < \epsilon\}
+\]
+gdje je $\pi$ stacionarna distribucija, $\pi^{(i)}$ početna distribucija koncentrirana na čvoru $v_i$, $P^t$ matrica prijelaza nakon $t$ koraka, a $|\cdot|_1$ ukupna varijacijska udaljenost, definirana kao $\frac{1}{2} \sum_{j} |\pi_j - \pi_j^{(i)}|$. Za ML kažemo da je \textit{brzo miješajući} \engl{rapidly mixing, fast mixing} ako je $T(\epsilon) = O(\log n)$. \cite{friends} 
+
+\textit{Teorem o stacionarnoj distribuciji}: Za neusmjereni beztežinski graf $G$, stacionarna distribucija ML preko $G$ je vektor $\pi = [\pi_{v_i}]$ gdje je $\pi_{v_i} = \frac{deg v_i}{2 m}$ tj. $\pi = [\frac{deg v_1}{2 m} \frac{deg v_2}{2 m} \dots \frac{deg v_n}{2 m}]$. \cite{friends}
+
+Iz prethodnog teorema možemo primijetiti da je vrijeme miješanja usko povezano s povezanošću grafa. Dobro povezani grafovi imaju malo vrijeme miješanja, dok slabo povezani grafovi imaju veće vrijeme miješanja.
 
 \chapter{Zaštita od sybil napada}
 
