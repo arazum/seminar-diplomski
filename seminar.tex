@@ -55,16 +55,29 @@ U mreži se nalazi određeni broj \textit{poštenih čvorova} \engl{honest nodes
 
 \subsection{Slučajne šetnje i vrijeme miješanja}
 Prijelaz između dva čvora u grafu može se prikazati markovljevim lancem (ML) koji predstavlja slučajnu štetnju kroz graf $G$. \textit{Slučajna šetnja} duljine $w$ preko $G$ je niz čvorova u $G$ koji počinje čvorom $v_i$ i završava čvorom $v_t$. ML je ergodičan \engl{ergodic} ako je ireducibilan i aperiodičan, što znači da ima stacionarnu distribuciju $\pi$ i distribucija poslije slučajne šetnje duljine $w$ konvergira prema $\pi$ kada $w \to \infty$. Stacionarna distribucija ML je distribucija koja je invarijantna s obrizorm na matricu prijelaza $P$ tj. $\pi P = \pi$. \textit{Vrijeme miješanja} \engl{mixing time} ML definira se kao najmanja duljina slučajne šetnje kojom se postiže stacionarna distribucija. Formalno i preciznije, ovu definiciju možemo izreći na sljedeći način:
-\[
+\begin{equation} \label{eq:mixing}
   T(\epsilon) = \max_{i} \min \{t : |\pi - \pi^{(i)} P^t|_1 < \epsilon\}
-\]
+\end{equation}
 gdje je $\pi$ stacionarna distribucija, $\pi^{(i)}$ početna distribucija koncentrirana na čvoru $v_i$, $P^t$ matrica prijelaza nakon $t$ koraka, a $|\cdot|_1$ ukupna varijacijska udaljenost, definirana kao $\frac{1}{2} \sum_{j} |\pi_j - \pi_j^{(i)}|$. Za ML kažemo da je \textit{brzo miješajući} \engl{rapidly mixing, fast mixing} ako je $T(\epsilon) = O(\log n)$. \cite{friends} 
 
-\textit{Teorem o stacionarnoj distribuciji}: Za neusmjereni beztežinski graf $G$, stacionarna distribucija ML preko $G$ je vektor $\pi = [\pi_{v_i}]$ gdje je $\pi_{v_i} = \frac{deg v_i}{2 m}$ tj. $\pi = [\frac{deg v_1}{2 m} \frac{deg v_2}{2 m} \dots \frac{deg v_n}{2 m}]$. \cite{friends}
+\textit{Teorem o stacionarnoj distribuciji}: Za neusmjereni beztežinski graf $G$, stacionarna distribucija ML preko $G$ je vektor $\pi = [\pi_{v_i}]$ gdje je $\pi_{v_i} = \frac{deg (v_i)}{2 m}$ tj. $\pi = [\frac{deg (v_1)}{2 m} \frac{deg (v_2)}{2 m} \dots \frac{deg (v_n)}{2 m}]$.
 
-Iz prethodnog teorema možemo primijetiti da je vrijeme miješanja usko povezano s povezanošću grafa. Dobro povezani grafovi imaju malo vrijeme miješanja, dok slabo povezani grafovi imaju veće vrijeme miješanja.
+Uz pomoć prethodnog teorema može se dokazati da je vrijeme miješanja u korelaciji s povezanošću grafa. Dobro povezani grafovi imaju malo vrijeme miješanja, dok slabo povezani grafovi imaju veće vrijeme miješanja. \cite{friends}
 
-\chapter{Zaštita od sybil napada}
+\chapter{Obrana od sybil napada}
+
+\section{Pretpostavke}
+Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama \cite{sybil-defender}:
+
+\textbf{Poštena regija je brzo miješajuća.} Kao što je definirano u prethodnom poglavlju, to znači da vrijedi $T(\epsilon) = O(\log n)$, za funkciju vremena miješanja definiranu prema jednadžbi \ref{eq:mixing}. Slučajne šetnje u brzo miješajućim grafovima općenito brzo konvergiraju ka stacionarnoj distribuciji. \cite{sybil-defender} Pokazano je da su stvarne društvene mreže brzo miješajuće. \cite{sybil-limit}
+
+\textbf{Jedan poznat pošteni čvor.} U grafu postoji barem jedan poznati pošteni čvor. Iz tog čvora kreće potraga za sybil čvorovima.
+
+\textbf{Administratoru je poznata topologija društvene mreže.} Ovo povlači tvrdnju da je algoritam centraliziran. Budući da su sve današnje društvene mreže pod centraliziranom kontrolom, može se pretpostaviti da su administratori tih mreža ti koji brinu za sigurnost sustava pa tako i obranu od sybil napada.
+
+\textbf{Veličina sybil regije nije usporediva s veličinom poštene regije.} Uz današnje veličine društvenih mreža (npr. Facebook preko 1,6 milijardi), može se pretpostaviti da je napadaču nemoguće stvoriti toliko sybil identiteta. To je tim više otežano uobičajenim postupcima provjere korisnika kao što su potvrda e-mail adrese, unos osobnih informacija te rješavanje CAPTCHA-e.
+
+\textbf{Broj napadačkih bridova je ograničen.} Kao posljedica, kada napadač stvori veći broj sybil čvorova, postojat će nepropocijonalno mali \textit{rez} (rezni skup) između poštene i sybil regije. Postojanje malog reza narušava svojstvo brzog miješanja: miješanje između poštenih čvorova je brzo, dok je miješanje između poštenih i sybil čvorova sporo.
 
 \section{Slučajne šetnje}
 
