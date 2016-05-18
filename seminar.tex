@@ -124,6 +124,8 @@ Algoritam za identifikaciju sybil čvorova sastoji se od dvije faze opisane u al
   }
 \end{algorithm}
 
+Kao što je pokazano u algoritmu \ref{alg:identify2}, kako bi se odredilo je li čvor $u$ sybil čvor, algoritma prvo napravi $R$ slučajnih šetnji početne duljine $l = l_0$ iz čvora $u$. $l_0$ je veći ili jedak duljini $l_{min}$ korištenoj u algoritmu \ref{alg:identify1}. Algoritam zatim uspoređuje broj čvorova čija frekvencija nije maja od $t$ sa srednjom vrijednosti $srVr$ iz trojke $(l, srVr, stdDev)$ ispisane u algoritmu \ref{alg:identify1}. Ako razlika broja prebrojenih čvorova i srednje vrijednosti veća od $stdDev \cdot \alpha$ ($\alpha = 20$), čvor $u$ smatra se sybil čvorom i algoritam završava. Inače, algoritam udvostručuje $l$ i ponavlja proces sve dok $l$ nije veća od $l_{max}$. Ako tada $u$ i dalje nije identificiran kao sybil čvor, on se tada smatra poštenim i algoritam se završava.
+
 \begin{algorithm}[h]
 	\caption{Identifikacija sybil čvorova}
 	\label{alg:identify2}
