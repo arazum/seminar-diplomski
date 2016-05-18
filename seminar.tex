@@ -88,7 +88,7 @@ Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za ko
 \textbf{Broj napadačkih bridova je ograničen.} Kao posljedica, kada napadač stvori veći broj sybil čvorova, postojat će nepropocijonalno mali \textit{rez} (rezni skup) između poštene i sybil regije. Postojanje malog reza narušava svojstvo brzog miješanja: miješanje između poštenih čvorova je brzo, dok je miješanje između poštenih i sybil čvorova sporo.
 
 \section{Algoritam}
-Cjelokupni algoritam sastoji se od tri komponente: algoritma za identifikaciju sybil čvorova, algoritma za detekciju sybil grupa te dva pristupa ograničavanju broja napadačkih bridova. Tri se komponente mogu koristiti u konjunkciji za što bolju obranu. \cite{sybil-defender}
+Cjelokupni algoritam sastoji se od tri komponente: algoritma za identifikaciju sybil čvorova, algoritma za pronalazak sybil grupa te dva pristupa ograničavanju broja napadačkih bridova. Tri se komponente mogu koristiti u konjunkciji za što bolju obranu. \cite{sybil-defender}
 %TODO: Uvod u odjeljak
 
 \subsection{Algoritam za identifikaciju sybil čvorova}
@@ -96,7 +96,7 @@ Algoritam za identifikaciju sybil čvorova prima graf društvene mreže $G(V, E)
 
 Intuicija algoritma je sljedeća: budući da je rez između poštene i sybil regije mali, slučajne šetnje koje polaze od sybil čvorova u pravilu će zapeti u sybil regiji. Također, zbog pretpostavke o neusporedivosti veličine sybil regije i poštene regije, broj čvorova prijeđenih slučajnm šetnjama iz poštenih čvorova bit će veći od broja čvorova prijeđenih šetnjama iz sybil čvorova sve dok su šetnje dovoljno dugačke i dok je broj šetnji dovoljno velik da se ta razlika istakne. Poradi daljnjih objašnjenja, broj prijelaza skupa slučajnih šetnji preko određenog čvora definira se kao \textit{frekvencija} tog čvora. Valja primijetiti da neki čvor može biti prijeđen više puta u jednoj šetnji.
 
-Algoritam za identifikaciju sybil čvorova sastoji se od dvije faze opisane u algoritmima \ref{alg:identify1} i \ref{alg:identify2}. Prva faza prima graf $G$ i $h$ kao ulaze i vraća pragove koje koristi druga faza kako bi identificirala sybil čvorove. Prva se faza treba pozvati samo jednom za cijeli graf društvene mreže. Kao što je pokazano u algoritmu \ref{alg:identify1}, algoritam prvo napravi $f$ kratkih slučajnih štetnji duljine $l_s = \log n$ iz poznatog poštenog čvora $h$. $f$ konačnih čvorova ravna se prema stacionarnoj distribuciji poštene regije zbog pretpostavke o brzom miješanju poštene regije. Konačni su čvorovi stoga pošteni s velikom vjerojatnošću. \cite{sybil-guard} Poslije ovoga poznati pošteni čvor $h$ i $f$ konačnih čvorova koriste se kao \textit{čvorovi sudci} od kojih algoritam postavlja kriterije za identifikaciju sybil čvorova. Valja primijetiti da mogućnost pojavljivanja sybil čvorova među čvorovima sudcima ne utječe na učinkovitost algoritma zbog njihovog veoma ograničenog broja. Počevši od najmanje duljine $l_{min}$ do najaveće $l_{max}$ s razlikama od 100 za svaku duljinu $l$, algoritam radi $R$ (od 1,000 do 2,000) slučajnih šetnji polazeći od svakog čvora sudca. Pritom broji čvorove čija frekvencija nije manja od praga $t$ (koji mala konstatna, npr. 5). Algoritam pronađe $f + 1$ takvu vrijednost za svaku duljinu $l$. Zatim izračuna srednju vrijednost i stadnardnu devijaciju tih vrijednosti i ispiše trojku $(l, srVr, stdDev)$.
+Algoritam za identifikaciju sybil čvorova sastoji se od dvije faze prikazane u algoritmima \ref{alg:identify1} i \ref{alg:identify2}. Prva faza prima graf $G$ i $h$ kao ulaze i vraća pragove koje koristi druga faza kako bi identificirala sybil čvorove. Prva se faza treba pozvati samo jednom za cijeli graf društvene mreže. Kao što je pokazano u algoritmu \ref{alg:identify1}, algoritam prvo napravi $f$ kratkih slučajnih štetnji duljine $l_s = \log n$ iz poznatog poštenog čvora $h$. $f$ konačnih čvorova ravna se prema stacionarnoj distribuciji poštene regije zbog pretpostavke o brzom miješanju poštene regije. Konačni su čvorovi stoga pošteni s velikom vjerojatnošću. \cite{sybil-guard} Poslije ovoga poznati pošteni čvor $h$ i $f$ konačnih čvorova koriste se kao \textit{čvorovi sudci} od kojih algoritam postavlja kriterije za identifikaciju sybil čvorova. Valja primijetiti da mogućnost pojavljivanja sybil čvorova među čvorovima sudcima ne utječe na učinkovitost algoritma zbog njihovog veoma ograničenog broja. Počevši od najmanje duljine $l_{min}$ do najaveće $l_{max}$ s razlikama od 100 za svaku duljinu $l$, algoritam radi $R$ (od 1,000 do 2,000) slučajnih šetnji polazeći od svakog čvora sudca. Pritom broji čvorove čija frekvencija nije manja od praga $t$ (koji je mala konstatna, npr. 5). Algoritam pronađe $f + 1$ takvu vrijednost za svaku duljinu $l$. Zatim izračuna srednju vrijednost i stadnardnu devijaciju tih vrijednosti i ispiše trojku $(l, srVr, stdDev)$.
 
 \begin{algorithm}[h]
 	\caption{Računanje pragova}
@@ -116,7 +116,7 @@ Algoritam za identifikaciju sybil čvorova sastoji se od dvije faze opisane u al
     \While{$l \leq l_{max}$}{
       \ForAll{$i \in J$}{
         Napravi $R$ slučajnih šetnji duljine $l$ iz čvora $i$\;
-        $n_i =$ broj čvorova s frekvencijom manjom od $t$\;
+        $n_i =$ broj čvorova s frekvencijom ne manjom od $t$\;
       }
       \out{$l, srVr(\{n_i : i \in J\}), stdDev(\{n_i : i \in J\})$}\;
       $l = l + 100$\;
@@ -124,12 +124,35 @@ Algoritam za identifikaciju sybil čvorova sastoji se od dvije faze opisane u al
   }
 \end{algorithm}
 
-Kao što je pokazano u algoritmu \ref{alg:identify2}, kako bi se odredilo je li čvor $u$ sybil čvor, algoritma prvo napravi $R$ slučajnih šetnji početne duljine $l = l_0$ iz čvora $u$. $l_0$ je veći ili jedak duljini $l_{min}$ korištenoj u algoritmu \ref{alg:identify1}. Algoritam zatim uspoređuje broj čvorova čija frekvencija nije maja od $t$ sa srednjom vrijednosti $srVr$ iz trojke $(l, srVr, stdDev)$ ispisane u algoritmu \ref{alg:identify1}. Ako razlika broja prebrojenih čvorova i srednje vrijednosti veća od $stdDev \cdot \alpha$ ($\alpha = 20$), čvor $u$ smatra se sybil čvorom i algoritam završava. Inače, algoritam udvostručuje $l$ i ponavlja proces sve dok $l$ nije veća od $l_{max}$. Ako tada $u$ i dalje nije identificiran kao sybil čvor, on se tada smatra poštenim i algoritam se završava.
+Kao što je pokazano u algoritmu \ref{alg:identify2}, kako bi se odredilo je li čvor $u$ sybil čvor, algoritma prvo napravi $R$ slučajnih šetnji početne duljine $l = l_0$ iz čvora $u$. $l_0$ je veći ili jedak duljini $l_{min}$ korištenoj u algoritmu \ref{alg:identify1}. Algoritam zatim uspoređuje broj čvorova čija frekvencija nije maja od $t$ sa srednjom vrijednosti $srVr$ iz trojke $(l, srVr, stdDev)$ ispisane u algoritmu \ref{alg:identify1}. Ako je razlika srednje vrijednosti i broja prebrojenih čvorova veća od $stdDev \cdot \alpha$ ($\alpha$ je konstanta, npr. 20), čvor $u$ smatra se sybil čvorom i algoritam završava. Inače, algoritam udvostručuje $l$ i ponavlja proces sve dok $l$ nije veća od $l_{max}$. Ako tada $u$ i dalje nije identificiran kao sybil čvor, on se tada smatra poštenim i algoritam se završava.
 
 \begin{algorithm}[h]
 	\caption{Identifikacija sybil čvorova}
 	\label{alg:identify2}
+
+	\SetKwProg{Fun}{function}{ begin}{end}
+  \SetKwFunction{iden}{identifikacija}
+  
+  \Fun{\iden{$G, u, trojke$}}{
+    $l = l_0$\;
+    \While{$l \leq l_{max}$}{
+      Napravi $R$ slučajnih šetnji dulje $l$ iz $u$\;
+      $m =$ broj čvorova čija frekvencija nije manja od $t$\;
+      $(l, srVr, stdDev) =$ trojka iz $trojke$ koja odgovara duljini $l$\;
+      \If{$srVr - m > stdDev \cdot \alpha$}{
+        \KwRet{$true$}\;
+      }
+      $l = 2 \cdot l$\;
+    }
+    \KwRet{$false$}\;
+  }
 \end{algorithm}
+
+Neka je dan graf društvene mreže $G(V, E)$ i poznati pošteni čvor $h$, najveća duljina slučajne šetnje $l_{max}$ preko koje se odlučuje kada će se završiti algoritam može se odrediti na sljedeći način. Napravi se $R$ slučajnih šetnji iz $h$ duljine $l_{max}$. Broj čvorova s frekvencijom ne manjom od $t$ mora biti veći od $\frac{|V|}{2}$. Kako je sybil regija manja od poštene regije, $l_{max}$ određena na ovaj način je dovoljno velika da $R$ slučajnih šetnji iz sybil čvora pokrije sybil regiju kako bi se istakla razlika između slučajnih šetnji iz poštenog i sybil čvora. Algoritam ispituje osumnjičeni čvor svaki puta udvostručujući duljinu slučajne šetnje. Ovo omogućuje pronalazak sybil čvorova u sybil regijama različitih veličina: za male regije dovoljne su krake šetnje, dok su za one veće potrebne dulje šetnje jer bi otisak kratkih slučajnih šetnji u syibil regiji mogao biti isti kao i u poštenoj regiji.
+
+\subsection{Algoritam za pronalazak sybil grupa}
+
+\subsection{Ograničavanje broj napadačkih bridova}
 
 \chapter{Zaključak}
 %TODO: Napiši poglavlje
