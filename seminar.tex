@@ -6,6 +6,7 @@
 \usepackage{mathtools}
 \usepackage{listings}
 \usepackage{tikz-uml}
+\usepackage[croatian, algoruled, noend, lined, linesnumbered, algochapter]{algorithm2e}
 \usepackage{multirow}
 \usepackage{tikz}
 \usepackage{svg}
@@ -49,12 +50,13 @@ Obrana od sybil napada bez puzdanog središnjeg autoriteta puno je teža. Puno d
 
 \subsection{Model sustava}
 Društvena mreža promatra se kao neusmjereni beztežinski graf $G = (V, E)$. Čvorovi predstavljaju korisnike mreže, a bridovi određenu vrstu odnosa između korisnika. Vrijedi $|V| = n, V = {v_1, v_2, ..., v_n}$ te $|E| = m$, gdje je $e_{ij} \in E$ tj. $v_i \to v_j$ ako je $v_i \in V$ susjedan $v_j \in V$, za $1 \leq i, j \leq n$. Matrica $A = [a_{ij}]^{n \times n}$ naziva se matrica susjedstva gdje je $a_{ij} = 1$ ako je $e_{ij} \in E$ i $a_{ij} = 0$ ako nije. Matrica $P = [p_{ij}]^{n \times n}$ naziva se matrica prijelaza \engl{transition matrix}
-\[ p_{ij} = 
+\begin{equation} \label{eq:transition}
+  p_{ij} = 
   \begin{cases}
     \frac{1}{deg(v_i)} & e_{ij} \in E \\
     0 & inace \\
   \end{cases}
-\]
+\end{equation}
 gdje je $deg(v_i)$ stupanj čvora $v_i$. Skup susjeda čvora $v_i$ označava se s $N(v_i)$ tako da je $deg(v_i) = |N(v_i)|$.
 
 U mreži se nalazi određeni broj \textit{poštenih čvorova} \engl{honest nodes}, svaki sa svojim identitetom, koji predstavljaju stvarne korisnike mreže. Također postoji jedan ili više napadača u mreži, svaki s određenim brojem lažnih identiteta koji su u grafu predstavljeni \textit{sybil čvorovima}. Bridovi između sybil čvorova i poštenih čvorova nazivaju se \textit{napadački bridovi} \engl{attack edges}. \textit{Sybil regija} \engl{sybil region} sastoji se od svih sybil čvorova, a \textit{poštena regija} \engl{honest region} sastoji se od svih poštenih čvorova. Sve sybil čvorove kontrolira napadač. Stoga, napadač može stvoriti proizvoljan broj bridova unutar sybil regije.
@@ -86,8 +88,25 @@ Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za ko
 \textbf{Broj napadačkih bridova je ograničen.} Kao posljedica, kada napadač stvori veći broj sybil čvorova, postojat će nepropocijonalno mali \textit{rez} (rezni skup) između poštene i sybil regije. Postojanje malog reza narušava svojstvo brzog miješanja: miješanje između poštenih čvorova je brzo, dok je miješanje između poštenih i sybil čvorova sporo.
 
 \section{Algoritam}
-Cjelokupni algoritam sastoji se od tri komponente: algoritma za identifikaciju sybil čvorova, algoritma za detekciju sybil grupa te dva pristupa ograničavanju broja napadačkih bridova. Tri se komponente mogu koristiti u konjunkciji za što bolju obranu.
-%TODO: nastavak
+Cjelokupni algoritam sastoji se od tri komponente: algoritma za identifikaciju sybil čvorova, algoritma za detekciju sybil grupa te dva pristupa ograničavanju broja napadačkih bridova. Tri se komponente mogu koristiti u konjunkciji za što bolju obranu. \cite{sybil-defender}
+%TODO: Uvod u odjeljak
+
+\subsection{Algoritam za identifikaciju sybil čvorova}
+Algoritam za identifikaciju sybil čvorova prima graf društvene mreže $G(V, E)$, poznati pošteni čvor $h$ i \textit{osumnjičeni čvor} \engl{suspect node} $u$ kao ulaz, a vraća je li čvor $u$ uistinu syibil čvor ili ne. Algoritam se temelji na slučajnim šetnjama. Slučajna šetnja na grafu definirana je nizom prijelaza između čvorova grafa $G$. Ako je šetnja u nekom koraku na čvoru $v_i$, onda je vjerojatnost da će se šetnja nastaviti preko brida $v_i \to v_j$ jednaka $\frac{1}{deg(v_i)}$ prema jednadžbi \ref{eq:transition}.
+
+Intuicija algoritma je sljedeća: budući da je rez između poštene i sybil regije mali, slučajne šetnje koje polaze od sybil čvorova u pravilu će zapeti u sybil regiji. Također, zbog pretpostavke o neusporedivosti veličine sybil regije i poštene regije, broj čvorova prijeđenih slučajnm šetnjama iz poštenih čvorova bit će veći od broja čvorova prijeđenih šetnjama iz sybil čvorova sve dok su šetnje dovoljno dugačke i dok je broj šetnji dovoljno velik da se ta razlika istakne. Poradi daljnjih objašnjenja, broj prijelaza skupa slučajnih šetnji preko određenog čvora definira se kao \textit{frekvencija} tog čvora. Valja primijetiti da neki čvor može biti prijeđen više puta u jednoj šetnji.
+
+Algoritam za identifikaciju sybil čvorova sastoji se od dvije faze opisane u algoritmima \ref{alg:identify1} i \ref{alg:identify2}. Prva faza prima graf $G$ i $h$ kao ulaze i vraća pragove koje koristi druga faza kako bi identificirala sybil čvorove. Prva se faza treba pozvati samo jednom za cijeli graf društvene mreže. Kao što je pokazano u algoritmu \ref{alg:identify1}, algoritam prvo napravi $f$ kratkih slučajnih štetnji duljine $l_s = \log n$ iz poznatog poštenog čvora $h$.
+
+\begin{algorithm}[h]
+	\caption{Računanje pragova}
+	\label{alg:identify1}
+\end{algorithm}
+
+\begin{algorithm}[h]
+	\caption{Identifikacija sybil čvorova}
+	\label{alg:identify2}
+\end{algorithm}
 
 \chapter{Zaključak}
 %TODO: Napiši poglavlje
