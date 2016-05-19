@@ -87,8 +87,7 @@
 \end{frame}
 
 \begin{frame}{Model društvene mreže}
-  \begin{figure}[h]
-    \centering
+  \begin{figure}
     \includegraphics[scale=0.3]{attack.png}
   \end{figure}
 \end{frame}
@@ -114,6 +113,11 @@
 
 \begin{frame}{Pretpostavke algoritma}
   \begin{itemize}
+    \item poštena regija je brzo miješajuća
+    \item jedan poznat pošteni čvor
+    \item administratoru je poznata topologija društvene mreže
+    \item veličina sybil regije nije usporediva s veličinom poštene regije
+    \item broj napadačkih bridova je ograničen
   \end{itemize}
 \end{frame}
 
@@ -131,18 +135,35 @@
 
 \begin{frame}{Korištene metode i skupovi podataka}
   \begin{itemize}
+    \item stvarni skupovi podataka iz društvenih mreža Facebook i Orkut s preko 3 milijuna čvorova
+    \item dva modela stvaranja sybil regija -- \textit{preferencijalno vezivanje} (PA) i \textit{Erdös-Rényi} (ER)
+    \item PA je model s "prirodnom" zastupljenošću stupnjeva čvorova, a ER je potpuno nasumičan
+    \item stvorene sybil regije imale su 10,000 čvorova i 1,000 napadačkih bridova
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Rezultati}
-  \begin{itemize}
-  \end{itemize}
+  \begin{table}
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|} \hline
+      \multirow{3}{*}{R} & \multicolumn{4}{c|}{Orkut} & \multicolumn{4}{c|}{Facebook} \\
+      & \multicolumn{2}{c}{PA model} & \multicolumn{2}{c|}{ER model} & \multicolumn{2}{c}{PA model} & \multicolumn{2}{c|}{ER model} \\
+      & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c}{$F^-$} & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c|}{$F^-$} & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c}{$F^-$} & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c|}{$F^-$} \\ \hline
+      1000 & 0 & 0.02\% & 0 & 0.28\% & 0 & 0.22\% & 0.1\% & 0.54\% \\
+      1500 & 0 & 0.02\% & 0 & 0.32\% & 0.3\% & 0.12\% & 0.2\% & 0.44\% \\
+      2000 & 0 & 0 & 0 & 0.22\% & 0.5\% & 0.04\% & 0.5\% & 0.4\% \\
+      \hline
+    \end{tabular}
+  \end{table}
 \end{frame}
 
 \section{Zaključak}
 
 \begin{frame}{Zaključak}
   \begin{itemize}
+    \item algoritam za obranu od sybil napada temeljen na slučajnim šetnjama i algoritamskim svojstvima grafova
+    \item identifikacija sybil čvorova i pronalazak grupa koje ih okružuju
+    \item algoritam se pokazao veoma učinkovitim i brzim prilikom testiranja na skupovima podataka iz stvarnog svijeta
   \end{itemize}
 \end{frame}
 
