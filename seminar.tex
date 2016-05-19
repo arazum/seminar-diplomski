@@ -88,7 +88,7 @@ Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za ko
 \textbf{Broj napadačkih bridova je ograničen.} Kao posljedica, kada napadač stvori veći broj sybil čvorova, postojat će nepropocijonalno mali \textit{rez} (rezni skup) između poštene i sybil regije. Postojanje malog reza narušava svojstvo brzog miješanja: miješanje između poštenih čvorova je brzo, dok je miješanje između poštenih i sybil čvorova sporo.
 
 \section{Algoritam}
-Cjelokupni algoritam sastoji se od tri komponente: algoritma za identifikaciju sybil čvorova, algoritma za pronalazak sybil grupa te dva pristupa ograničavanju broja napadačkih bridova. Tri se komponente mogu koristiti u konjunkciji za što bolju obranu. \cite{sybil-defender}
+Cjelokupni algoritam sastoji se od dvije osnovne komponente: algoritma za identifikaciju sybil čvorova i algoritma za pronalazak sybil grupa.
 %TODO: Uvod u odjeljak
 
 \subsection{Algoritam za identifikaciju sybil čvorova}
@@ -151,8 +151,36 @@ Kao što je pokazano u algoritmu \ref{alg:identify2}, kako bi se odredilo je li 
 Neka je dan graf društvene mreže $G(V, E)$ i poznati pošteni čvor $h$, najveća duljina slučajne šetnje $l_{max}$ preko koje se odlučuje kada će se završiti algoritam može se odrediti na sljedeći način. Napravi se $R$ slučajnih šetnji iz $h$ duljine $l_{max}$. Broj čvorova s frekvencijom ne manjom od $t$ mora biti veći od $\frac{|V|}{2}$. Kako je sybil regija manja od poštene regije, $l_{max}$ određena na ovaj način je dovoljno velika da $R$ slučajnih šetnji iz sybil čvora pokrije sybil regiju kako bi se istakla razlika između slučajnih šetnji iz poštenog i sybil čvora. Algoritam ispituje osumnjičeni čvor svaki puta udvostručujući duljinu slučajne šetnje. Ovo omogućuje pronalazak sybil čvorova u sybil regijama različitih veličina: za male regije dovoljne su krake šetnje, dok su za one veće potrebne dulje šetnje jer bi otisak kratkih slučajnih šetnji u syibil regiji mogao biti isti kao i u poštenoj regiji.
 
 \subsection{Algoritam za pronalazak sybil grupa}
+Nakon što se prepozna jedan sybil čvor potrebno je odrediti sybil grupu koja ga okružuje. Algoritam za pronalazak sybil grupe prima graf društvene mreže $G(V, E)$ i poznati sybil čvor $s$ te vraća sybil grupu koja okružuje dani čvor. Sybil grupa definira se kao pograf grafa $G$ koji se sastoji samo od sybil čvorova u kojemu ne postoji mali rez.
 
-\subsection{Ograničavanje broj napadačkih bridova}
+Algoritam pronalaska sybil grupe temelji se na \textit{djelomičnim} slučajnim šetnjama iz $s$. Djelomične slučajne šetnje ponašaju se isto kao i \textit{jednostavne} slučajne šetnje korištene u prethodnom poglavlju, osim što ne prolaze istim čvorovima. Zbog toga, kada djelomična šetnja dođe do čvora čije je sve susjede već prošla, ta je djelomična šetnja \textit{mrtva} i ne može se nastaviti. Zbog ovog svojstva djelomične slučajne šetnje koje polaze iz sybil čvorova teže će izaći iz sybil grupe, u usporedbi s jednostavnim šetnjama, jer one \textit{umiru} kada god dođu do ruba sybil grupe. Slično kao i algoritam za identifikaciju sybil čvorova, ovaj se algoritam temelji na činjenici da će djelomične slučajne šetnje iz sybil čvorova najčešće ostati u sybil regiji.
+
+Sam algoritam također se sastoji od dvije faze kao i algoritam za identifikaciju sybil čvorova. Zadaća prve faze procjena duljine djelomičnih slučajnih šetnji u drugoj fazi. Algoritam počinje nekom duljinom $l_0$ i radi $R$ djelomičnih slučajnih šetnji. Zatim izračunava omjer mrtvih šetnji i uspoređuje ga s zadanom konstanom $\beta$ (broj blizu 1, npr. 0.95). Ako je omjer manji od $\beta$, duljina šetnje se udvostručuje i algoritam se nastavlja. Ovo se ponavlja sve dok omjer mrtvih šetnji nije dovoljno velik. Ideja algoritma je da će broj neobiđenih čvorova u sybil grupi biti vrlo mali ako je broj mrtvih šetnji blizu 1.
+
+Druga faza algoritma osigurava da se u pronađenoj grupi ne nađu pošteni čvorovi. To se može dogoditi jer neke djelomične slučajne šetnje mogu proći mali rez između sybil grupe i poštene regije te proći kroz veliki broj poštenih čvorova. Kako bi se ovo postiglo, algoritam koristi mjeru\textit{provodljivosti} \engl{conductance}. Provodljivost nekog grafa $S(V, E)$ definira se na sljedeći način:
+\[ d = \sum_{v \in V} deg(v) \]
+\[ a = |\{\{a, b\} \in E : a \in V \land b \notin V\}| \]
+\[ provodljivost(S) = \frac{a}{d} \]
+$d$ je dakle zboj stupnjeva svih čvorova u $S$, a $a$ broj bridova s jednim vrhom u $S$ a drugim u $\overline{S}$. Provodljivost grafa $S$ je omjer $a$ i $d$. Provodljivost je stoga mjera kvalitete reza između $S$ i $\overline{S}$: što je manja to je rez manji.
+
+Algoritam u drugoj fazi napravi $R$ djelomičnih slučajnih šetnji iz poznatog sybil čvora $s$ duljine određene u prvoj fazi algoritma. Zatim se prijeđeni čvorovi sortiraju prema frekvenciji te se njima prolazi u silaznom poretku. Prolazeći kroz čvorove stvara se skup $S$. Neki se čvor dodaje u skup ako se njegovim dodavanjem provodljivost skupa ne povećava. Nakon što se prođu svi čvorovi, algoritam zabilježi trenutnu vrijednost provodljivosti te ponavlja postupak. Ovo se ponavlja sve dok provodljivost nakon iteracije po čvorovima ostane nepromijenjena.
+
+\chapter{Rezultati postojećeg rješenja}
+\begin{table}[!h]
+	\centering
+	\caption{Rezultati SybilDefender algoritma. 10,000 sybil čvorova, 1,000 napadačkih bridova}
+	\label{tbl:results}
+	
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|} \hline
+    \multirow{3}{*}{R} & \multicolumn{4}{c|}{Orkut} & \multicolumn{4}{c|}{Facebook} \\
+    & \multicolumn{2}{c}{PA model} & \multicolumn{2}{c|}{ER model} & \multicolumn{2}{c}{PA model} & \multicolumn{2}{c|}{ER model} \\
+    & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c}{$F^-$} & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c|}{$F^-$} & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c}{$F^-$} & \multicolumn{1}{c}{$F^+$} & \multicolumn{1}{c|}{$F^-$} \\ \hline
+    1000 & 0 & 0.02\% & 0 & 0.28\% & 0 & 0.22\% & 0.1\% & 0.54\% \\
+    1500 & 0 & 0.02\% & 0 & 0.32\% & 0.3\% & 0.12\% & 0.2\% & 0.44\% \\
+    2000 & 0 & 0 & 0 & 0.22\% & 0.5\% & 0.04\% & 0.5\% & 0.4\% \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \chapter{Zaključak}
 %TODO: Napiši poglavlje
