@@ -22,11 +22,13 @@
 \tableofcontents
 
 \chapter{Uvod}
-\textit{Sybil} napadi \engl{Sybil attacks} su dobro poznata vrsta napada u distribuiranim sustavima poput senzorskih i \textit{peer-to-peer} mreža. U osnovnom obliku ovog napada napadač stori velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Broj identiteta koji napadač može stvoriti ovisi o napadačevim resursima kao što su propusnost mreže, memorija i računarna moć.
+\textit{Sybil} napadi \engl{Sybil attacks} dobro su poznata vrsta napada u distribuiranim sustavima poput senzorskih i \textit{peer-to-peer} mreža. U osnovnom obliku ovog napada napadač stvara velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Broj identiteta koji napadač može stvoriti ovisi o napadačevim resursima kao što su propusnost mreže, memorija i računarna moć.
 
-%TODO: Napiši poglavlje
+Sybil napadi mogu se ublažiti uvođenjem središnjeg autoriteta koji može ograničiti broj lažnih identiteta traženjem osobnih informacija od korisnika, kao što je broj osobne iskaznice ili plaćanjem registracije. No, takvi zahtjevi odvraćaju korisnike od korištenja mreže jer stavljaju dodatni teret na njega.
 
-\chapter{Sybil napadi}
+Isključenjem ideje od središnjem autoritetu nameće se rješenje koje obuhvaća temeljitu analizu grafa drušvene mreže i ispitivanje raznih algoritamskih svojstava grafa. Pristup objašnjen u ovom radu temeljen je upravo na tome i rađen je prema algoritmu opisanom u \cite{sybil-defender-old} i \cite{sybil-defender}. U poglavlju koje slijedi objašnjeni su prethodni pristupi ovom problemu te pojmovi i definicije korištene u radu. U poglavlju \ref{ch:defense} detaljno je opisan algoritam obrane od sybil napada. U poglavlju \ref{ch:results} opisani su korišteni skupovi podataka, načini ispitivanja te rezultati evaluacije postojeće implementacije algoritma. Konačno, u poglavlju \ref{ch:conclusion} nalazi se zaključak rada.
+
+\chapter{Sybil napadi} \label{ch:sybil}
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.3]{attack.png}
@@ -36,7 +38,7 @@
 
 %TODO: uvod u poglavlje
 
-\section{Povijest i motivacija}
+\section{Povijest i drugi pristupi}
 %TODO: uvod u odjeljak
 
 \subsection{Središnji autoritet}
@@ -72,7 +74,7 @@ gdje je $\pi$ stacionarna distribucija, $\pi^{(i)}$ početna distribucija koncen
 
 Uz pomoć prethodnog teorema može se dokazati da je vrijeme miješanja u korelaciji s povezanošću grafa. Dobro povezani grafovi imaju malo vrijeme miješanja, dok slabo povezani grafovi imaju veće vrijeme miješanja. \cite{friends}
 
-\chapter{Obrana od sybil napada}
+\chapter{Obrana od sybil napada} \label{ch:defense}
 
 \section{Pretpostavke}
 Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za koje se pokazalo da vrijede u stvarnim društvenim mrežama \cite{sybil-defender}:
@@ -165,7 +167,7 @@ $d$ je dakle zboj stupnjeva svih čvorova u $S$, a $a$ broj bridova s jednim vrh
 
 Algoritam u drugoj fazi napravi $R$ djelomičnih slučajnih šetnji iz poznatog sybil čvora $s$ duljine određene u prvoj fazi algoritma. Zatim se prijeđeni čvorovi sortiraju prema frekvenciji te se njima prolazi u silaznom poretku. Prolazeći kroz čvorove stvara se skup $S$. Neki se čvor dodaje u skup ako se njegovim dodavanjem provodljivost skupa ne povećava. Nakon što se prođu svi čvorovi, algoritam zabilježi trenutnu vrijednost provodljivosti te ponavlja postupak. Ovo se ponavlja sve dok provodljivost nakon iteracije po čvorovima ostane nepromijenjena.
 
-\chapter{Rezultati postojećeg rješenja}
+\chapter{Rezultati postojećeg rješenja} \label{ch:results}
 U ovom poglavlju dani su rezultati postojeće implementacije opisanog algoritma iz \cite{sybil-defender-old} i \cite{sybil-defender}. Skupovi podataka korišteni za evaluaciju dobiveni iz stvarnih društvenih mreža Orkut i Facebook. \textit{Orkut} skup podataka sastoji se od 3,072,441 čvorova i 117,185,083 bridova s prosječnim stupnjem 76.28, dok se \textit{Facebook} skup podataka sastoji od 3,097,165 čvorova i 28,377,481 bridova s prosječnim stupnjem 18.32. Orkut skup podataka dobiven je uzorkovanjem pretragom u širinu grafa Orkut društvene mreže, čime su očuvana topološka svojstva grafa. S druge strane, Facebook skup podataka je regionalna mreža na Facebooku -- dva čvora su povezana ako u istoj regionalnoj mreži i ako su prijatelji na Facebooku. Ovime topološka svojstva grafa nisu očuvana pa je npr. prosječni stupanj u grafu manji nego što bi trebao biti. Evaluacijom nad oba skupa podataka pokazuje učinkovitost algoritma na društvenim mrežama različitih topoloških obilježja.
 
 U ispitivanju koristili su se model \textit{preferencijalnog vezivanja} \engl{preferential attachment} (PA) i \textit{Erdös-Rényi} (ER) model. Mreže stvorene PA modelom neovisne su o razmjeru, što znači da stupnjevi njihovih čvorova podliježu distribuciji eksponencijalnog zakona, široko priznatom svojstvu društvenih mreža. Topologije stvorene preko ER modela nasumične su mreže bez neke određene pristranosti čime se postižu proizvoljne strukture sybil regija koje mogu biti stvorene od strane napadača.
@@ -188,7 +190,7 @@ U ispitivanju koristili su se model \textit{preferencijalnog vezivanja} \engl{pr
 
 Tablica \ref{tbl:results} prikazuje rezultate evaluacije algoritma nad Facebook i Orkut skupovima podataka za PA i ER modele. Prikazani udjeli lažnih pozitiva ($F^+$) i lažnih negativa ($F^-$). Algoritam je ispitivan s različitim brojevima slučajnih šetnji ($R$). Kao što je vidljivo iz tablice, udjeli lažnih negativa i pozitiva vrlo su niski, što svjedoči o kvaliteti rezultata algoritma.
 
-\chapter{Zaključak}
+\chapter{Zaključak} \label{ch:conclusion}
 %TODO: Napiši poglavlje
 
 \bibliography{literatura}
