@@ -166,6 +166,10 @@ $d$ je dakle zboj stupnjeva svih čvorova u $S$, a $a$ broj bridova s jednim vrh
 Algoritam u drugoj fazi napravi $R$ djelomičnih slučajnih šetnji iz poznatog sybil čvora $s$ duljine određene u prvoj fazi algoritma. Zatim se prijeđeni čvorovi sortiraju prema frekvenciji te se njima prolazi u silaznom poretku. Prolazeći kroz čvorove stvara se skup $S$. Neki se čvor dodaje u skup ako se njegovim dodavanjem provodljivost skupa ne povećava. Nakon što se prođu svi čvorovi, algoritam zabilježi trenutnu vrijednost provodljivosti te ponavlja postupak. Ovo se ponavlja sve dok provodljivost nakon iteracije po čvorovima ostane nepromijenjena.
 
 \chapter{Rezultati postojećeg rješenja}
+U ovom poglavlju dani su rezultati postojeće implementacije opisanog algoritma iz \cite{sybil-defender-old} i \cite{sybil-defender}. Skupovi podataka korišteni za evaluaciju dobiveni iz stvarnih društvenih mreža Orkut i Facebook. \textit{Orkut} skup podataka sastoji se od 3,072,441 čvorova i 117,185,083 bridova s prosječnim stupnjem 76.28, dok se \textit{Facebook} skup podataka sastoji od 3,097,165 čvorova i 28,377,481 bridova s prosječnim stupnjem 18.32. Orkut skup podataka dobiven je uzorkovanjem pretragom u širinu grafa Orkut društvene mreže, čime su očuvana topološka svojstva grafa. S druge strane, Facebook skup podataka je regionalna mreža na Facebooku -- dva čvora su povezana ako u istoj regionalnoj mreži i ako su prijatelji na Facebooku. Ovime topološka svojstva grafa nisu očuvana pa je npr. prosječni stupanj u grafu manji nego što bi trebao biti. Evaluacijom nad oba skupa podataka pokazuje učinkovitost algoritma na društvenim mrežama različitih topoloških obilježja.
+
+U ispitivanju koristili su se model \textit{preferencijalnog vezivanja} \engl{preferential attachment} (PA) i \textit{Erdös-Rényi} (ER) model. Mreže stvorene PA modelom neovisne su o razmjeru, što znači da stupnjevi njihovih čvorova podliježu distribuciji eksponencijalnog zakona, široko priznatom svojstvu društvenih mreža. Topologije stvorene preko ER modela nasumične su mreže bez neke određene pristranosti čime se postižu proizvoljne strukture sybil regija koje mogu biti stvorene od strane napadača.
+
 \begin{table}[!h]
 	\centering
 	\caption{Rezultati SybilDefender algoritma. 10,000 sybil čvorova, 1,000 napadačkih bridova}
@@ -181,6 +185,8 @@ Algoritam u drugoj fazi napravi $R$ djelomičnih slučajnih šetnji iz poznatog 
 		\hline
 	\end{tabular}
 \end{table}
+
+Tablica \ref{tbl:results} prikazuje rezultate evaluacije algoritma nad Facebook i Orkut skupovima podataka za PA i ER modele. Prikazani udjeli lažnih pozitiva ($F^+$) i lažnih negativa ($F^-$). Algoritam je ispitivan s različitim brojevima slučajnih šetnji ($R$). Kao što je vidljivo iz tablice, udjeli lažnih negativa i pozitiva vrlo su niski, što svjedoči o kvaliteti rezultata algoritma.
 
 \chapter{Zaključak}
 %TODO: Napiši poglavlje
