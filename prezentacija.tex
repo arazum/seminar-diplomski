@@ -78,11 +78,35 @@
 
 \begin{frame}{Model društvene mreže}
   \begin{itemize}
+    \item neusmjereni beztežinski graf -- čvorovi su korisnici, a bridovi odnosi među njima, npr. prijateljstva
+    \item \textit{pošteni čvorovi} -- predstavljaju stvarne korisnike mreže
+    \item \textit{sybil čvorovi} -- lažni identiteti stvoreni od strane napadača
+    \item \textit{napadački bridovi} -- bridovi između sybil čvorova i poštenih čvorova
+    \item \textit{sybil regija} sastoji se od svih sybil čvorova, a \textit{poštena regija} od svih poštenih čvorova
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Model društvene mreže}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.3]{attack.png}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Slučajne šetnje}
   \begin{itemize}
+    \item \textit{slučajna šetnja} -- šetnja u grafu s nasumično odabranim prijelazima
+    \item slučajne šetnje su \textit{ergodične} -- konvergiraju prema \textit{stacionarnoj distribuciji} kada im duljina teži u beskonačnost
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Vrijeme miješanja}
+  \begin{itemize}
+    \item definira se kao najmanja duljina slučajne šetnje kojom se postiže stacionarna distribucija do neke mjere $\epsilon$:
+      \[ T(\epsilon) = \max_{i} \min \{t : |\pi - \pi^{(i)} P^t|_1 < \epsilon\} \]
+    \item graf s $n$ čvorova je \textit{brzo miješajući} ako je:
+      \[ T(\epsilon) = O(\log n) \]
+    \item dobro povezani grafovi su brzo miješajući
   \end{itemize}
 \end{frame}
 
