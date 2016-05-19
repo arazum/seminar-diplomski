@@ -121,13 +121,39 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Identifikacija sybil čvorova}
+\begin{frame}{Identifikacija sybil čvorova: prva faza}
   \begin{itemize}
+    \item rade se slučajne šetnje od poznatog poštenog čvora
+    \item konačni čvorovi šetnji podvrgavaju se stacionarnoj distribuciji i s visokom su vjerojatnošću pošteni
+    \item početni pošteni čvor i dobiveni konačni čvorovi su \textit{čvorovi sudci}
+    \item iz svakog od njih napravi se veći broj šetnji različitih duljina
+    \item za svaku duljinu pamti se broj čvorova s frekvencijom većom od nekog praga
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Pronalazak sybil grupa}
+\begin{frame}{Identifikacija sybil čvorova: druga faza}
   \begin{itemize}
+    \item napravi se veći broj šetnji određene duljine iz \textit{osumljičenog čvora}
+    \item izračuna se broj čvorova čija je frekvencija veća od praga
+    \item ako je dobiveni broj dovoljno manji od broja izračunatog u prvom koraku za odgovarajuću duljinu, čvor je sybil čvor
+    \item u suprotnom postupak, povećava se duljina šetnje i postpuak se ponavlja
+    \item ako se dođe do gornje granice za duljinu šetnje, čvor je pošten
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Pronalazak sybil grupa: prva faza}
+  \begin{itemize}
+    \item \textit{mrtva šetnja} je ona koja ponovo prolazi već prijeđenim čvorom
+    \item rez između sybil i poštene regije je mali -- ako je duljina šetnje dovoljno velika, omjer mrtvih šetnji biti će blizak 1
+    \item u prvoj se fazi određuje duljina šetnje kako bi skup šetnji pokrio barem sybil grupu
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Pronalazak sybil grupa: druga faza}
+  \begin{itemize}
+    \item zadaća druge faze je uklanjanje poštenih čvorova iz nađene sybil grupe
+    \item \textit{provodljivost} podgrafa -- omjer broja bridova koji ga spajaju s ostatkom grafa i bridova u njemu
+    \item čvorovi se u dobivenoj grupi sortiraju silazno po frekvenciji i višestrukim se iteracijama dodaju sve dok se provodljivost smanjuje
   \end{itemize}
 \end{frame}
 
