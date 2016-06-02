@@ -29,17 +29,10 @@ Sybil napadi mogu se ublažiti uvođenjem središnjeg autoriteta koji može ogra
 Isključenjem ideje od središnjem autoritetu nameće se rješenje koje obuhvaća temeljitu analizu grafa drušvene mreže i ispitivanje raznih algoritamskih svojstava grafa. Pristup objašnjen u ovom radu temeljen je upravo na tome i rađen je prema algoritmu opisanom u \cite{sybil-defender-old} i \cite{sybil-defender}. U poglavlju koje slijedi objašnjeni su prethodni pristupi ovom problemu te pojmovi i definicije korištene u radu. U poglavlju \ref{ch:defense} detaljno je opisan algoritam obrane od sybil napada. U poglavlju \ref{ch:results} opisani su korišteni skupovi podataka, načini ispitivanja te rezultati evaluacije postojeće implementacije algoritma. Konačno, u poglavlju \ref{ch:conclusion} nalazi se zaključak rada.
 
 \chapter{Sybil napadi} \label{ch:sybil}
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.3]{attack.png}
-	\caption{Napadački bridovi u grafu društvene mreže}
-	\label{fig:attack}
-\end{figure}
-
-%TODO: uvod u poglavlje
+Kao što je rečeno u uvodu, sybil napadi su vrsta napada u distribuiranim sustavima koji se temelje na stvaranju velikog broja lažnih identiteta preko kojih se utječe na ponašanje napadnutog sustava. U odjeljku \ref{sec:terminology} objašnjen je model sustava i pojmovi vezani za sybil napade poput \textit{slučajnih šetnji} i \textit{vremena miješanja}. U idućem odjeljku prikazani su povijesni pristupi sybil napadima i slični pristupi koji se nisu pokazali toliko učinkovitima kao današnji algoritmi. Oni ujedno služe i kao motivacija razvoj istih.
 
 \section{Povijest i drugi pristupi}
-%TODO: uvod u odjeljak
+U ovom odjeljku prikazani su prijašnji pristupi sybil napadima i njihove manjkavosti. U idućem pododjeljku objašnjeno je rješenje korištenjem središnjeg autoriteta. Nakon toga prikazani su decentralizirani pristupi i njihovi problemi.
 
 \subsection{Središnji autoritet}
 Sybil napadi mogu se lagano kontrolirati pomoću pouzdranog središnjeg autoriteta koji izdaje i provjerava podatke jedinstvene stvarnom čovjeku. Na primjer, ako sustav zahtijeva registraciju korisnika pomoću broja osobne iskaznice ili vozačke dozvole, onda prepreka za sybil napade postaje puno viša. Autoritet također može zahtijevati i plaćanje za registraciju. Nažalost, postoje mnogi slučajevi gdje takvi sustavi nisu poželjni. Na primjer, može biti teško izabrati jedinstveni autoritet kome mogu vjerovati svi korisnici na svijetu. Nadalje, taj središnji autoritet može lako postati točka zatajenja \engl{single point of failure} -- meta \textit{denial-of-service} napada ili usko grlo u izvođenju sustava. Na poslijetku, plaćanje registracije ili traženje osjetljivih informacija prilikom iste odbilo bi velik broj korisnika. Jedini način da se ovi problemi izbjegnu je distribuiranost sustava za provjeru. \cite{sybil-guard}
@@ -47,8 +40,8 @@ Sybil napadi mogu se lagano kontrolirati pomoću pouzdranog središnjeg autorite
 \subsection{Izazovi u decentraliziranim pristupima}
 Obrana od sybil napada bez puzdanog središnjeg autoriteta puno je teža. Puno decentraliziranih sustava pokušavalo se boriti protiv sybil napada povezivanjem identiteta korisnika s IP adresom. No, napadačima još tada korištenjem određenih metoda nije bio problem ukrasti i iskoristiti veći broj IP adresa s kojih mogu djelovati. \cite{spammers} Osim krađe IP adresa, napadač može preuzeti veći broj korisničkih računala tako stvarajući \textit{botnet} sačinjen od tisuća računala diljem svijeta. Mnogi drugi decentralizirani načini obrane također su se pokazali neuspješnima. Primjerice zagonetke koje zahtijevaju ljudski napor, kao što je \textit{CAPTCHA}, napadač može upotrijebiti na svojoj stranici tražeći od korisnika njegove stranice da ih riješe. Sve to vodi do zaključka kako se obrana od napada ne može temeljiti na jednokratnim provjerama prilikom registracije korisnika na sustav, već na temeljitoj analizi grafa društvene mreže te ispitivanju na raznih algoritamskih svojstava grafa. \cite{sybil-guard}
 
-\section{Pojmovi i definicije}
-%TODO: uvod u odjeljak
+\section{Pojmovi i definicije} \label{sec:terminology}
+U ovom odjeljku detaljno je objašnjen model sustava i uvedeni su pojmovi koji će se koristiti u ovom radu.
 
 \subsection{Model sustava}
 Društvena mreža promatra se kao neusmjereni beztežinski graf $G = (V, E)$. Čvorovi predstavljaju korisnike mreže, a bridovi određenu vrstu odnosa između korisnika. Vrijedi $|V| = n, V = {v_1, v_2, ..., v_n}$ te $|E| = m$, gdje je $e_{ij} \in E$ tj. $v_i \to v_j$ ako je $v_i \in V$ susjedan $v_j \in V$, za $1 \leq i, j \leq n$. Matrica $A = [a_{ij}]^{n \times n}$ naziva se matrica susjedstva gdje je $a_{ij} = 1$ ako je $e_{ij} \in E$ i $a_{ij} = 0$ ako nije. Matrica $P = [p_{ij}]^{n \times n}$ naziva se matrica prijelaza \engl{transition matrix}
@@ -61,7 +54,14 @@ Društvena mreža promatra se kao neusmjereni beztežinski graf $G = (V, E)$. Č
 \end{equation}
 gdje je $deg(v_i)$ stupanj čvora $v_i$. Skup susjeda čvora $v_i$ označava se s $N(v_i)$ tako da je $deg(v_i) = |N(v_i)|$.
 
-U mreži se nalazi određeni broj \textit{poštenih čvorova} \engl{honest nodes}, svaki sa svojim identitetom, koji predstavljaju stvarne korisnike mreže. Također postoji jedan ili više napadača u mreži, svaki s određenim brojem lažnih identiteta koji su u grafu predstavljeni \textit{sybil čvorovima}. Bridovi između sybil čvorova i poštenih čvorova nazivaju se \textit{napadački bridovi} \engl{attack edges}. \textit{Sybil regija} \engl{sybil region} sastoji se od svih sybil čvorova, a \textit{poštena regija} \engl{honest region} sastoji se od svih poštenih čvorova. Sve sybil čvorove kontrolira napadač. Stoga, napadač može stvoriti proizvoljan broj bridova unutar sybil regije.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{attack.png}
+	\caption{Napadački bridovi u grafu društvene mreže}
+	\label{fig:attack}
+\end{figure}
+
+U mreži se nalazi određeni broj \textit{poštenih čvorova} \engl{honest nodes}, svaki sa svojim identitetom, koji predstavljaju stvarne korisnike mreže. Također postoji jedan ili više napadača u mreži, svaki s određenim brojem lažnih identiteta koji su u grafu predstavljeni \textit{sybil čvorovima}. Bridovi između sybil čvorova i poštenih čvorova nazivaju se \textit{napadački bridovi} \engl{attack edges}. \textit{Sybil regija} \engl{sybil region} sastoji se od svih sybil čvorova, a \textit{poštena regija} \engl{honest region} sastoji se od svih poštenih čvorova. Sve sybil čvorove kontrolira napadač. Stoga, napadač može stvoriti proizvoljan broj bridova unutar sybil regije. Slika \ref{fig:attack} prikazuje gore opisane pojmove i njihov međuodnos. S lijeve se strane nalazi poštena, a s desne sybil regija.
 
 \subsection{Slučajne šetnje i vrijeme miješanja}
 Prijelaz između dva čvora u grafu može se prikazati markovljevim lancem (ML) koji predstavlja slučajnu štetnju kroz graf $G$. \textit{Slučajna šetnja} duljine $w$ preko $G$ je niz čvorova u $G$ koji počinje čvorom $v_i$ i završava čvorom $v_t$. ML je ergodičan \engl{ergodic} ako je ireducibilan i aperiodičan, što znači da ima stacionarnu distribuciju $\pi$ i distribucija poslije slučajne šetnje duljine $w$ konvergira prema $\pi$ kada $w \to \infty$. Stacionarna distribucija ML je distribucija koja je invarijantna s obrizorm na matricu prijelaza $P$ tj. $\pi P = \pi$. \textit{Vrijeme miješanja} \engl{mixing time} ML definira se kao najmanja duljina slučajne šetnje kojom se postiže stacionarna distribucija. Formalno i preciznije, ovu definiciju možemo izreći na sljedeći način:
@@ -75,6 +75,7 @@ gdje je $\pi$ stacionarna distribucija, $\pi^{(i)}$ početna distribucija koncen
 Uz pomoć prethodnog teorema može se dokazati da je vrijeme miješanja u korelaciji s povezanošću grafa. Dobro povezani grafovi imaju malo vrijeme miješanja, dok slabo povezani grafovi imaju veće vrijeme miješanja. \cite{friends}
 
 \chapter{Obrana od sybil napada} \label{ch:defense}
+U ovom poglavlju objašnjen je algoritam obrane od sybil napada iz \cite{sybil-defender-old} i \cite{sybil-defender}. U idućem odjeljku navedene su pretpostavke algoritma koje moraju vrijediti kako bi algoritam funkcionirao. U odjeljku \ref{sec:algorithm} detaljno je opisan sam algoritam.
 
 \section{Pretpostavke}
 Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za koje se pokazalo da vrijede u stvarnim društvenim mrežama \cite{sybil-defender}:
@@ -89,9 +90,8 @@ Algoritmi za obranu od sybil napda temelje se na sljedećim pretpostavkama za ko
 
 \textbf{Broj napadačkih bridova je ograničen.} Kao posljedica, kada napadač stvori veći broj sybil čvorova, postojat će nepropocijonalno mali \textit{rez} (rezni skup) između poštene i sybil regije. Postojanje malog reza narušava svojstvo brzog miješanja: miješanje između poštenih čvorova je brzo, dok je miješanje između poštenih i sybil čvorova sporo.
 
-\section{Algoritam}
+\section{Algoritam} \label{sec:algorithm}
 Cjelokupni algoritam sastoji se od dvije osnovne komponente: algoritma za identifikaciju sybil čvorova i algoritma za pronalazak sybil grupa.
-%TODO: Uvod u odjeljak
 
 \subsection{Algoritam za identifikaciju sybil čvorova}
 Algoritam za identifikaciju sybil čvorova prima graf društvene mreže $G(V, E)$, poznati pošteni čvor $h$ i \textit{osumnjičeni čvor} \engl{suspect node} $u$ kao ulaz, a vraća je li čvor $u$ uistinu syibil čvor ili ne. Algoritam se temelji na slučajnim šetnjama. Slučajna šetnja na grafu definirana je nizom prijelaza između čvorova grafa $G$. Ako je šetnja u nekom koraku na čvoru $v_i$, onda je vjerojatnost da će se šetnja nastaviti preko brida $v_i \to v_j$ jednaka $\frac{1}{deg(v_i)}$ prema jednadžbi \ref{eq:transition}.
@@ -174,7 +174,7 @@ U ispitivanju koristili su se model \textit{preferencijalnog vezivanja} \engl{pr
 
 \begin{table}[!h]
 	\centering
-	\caption{Rezultati SybilDefender algoritma. 10,000 sybil čvorova, 1,000 napadačkih bridova}
+  \caption{Rezultati SybilDefender algoritma\cite{sybil-defender}. 10,000 sybil čvorova, 1,000 napadačkih bridova}
 	\label{tbl:results}
 	
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|} \hline
@@ -191,15 +191,19 @@ U ispitivanju koristili su se model \textit{preferencijalnog vezivanja} \engl{pr
 Tablica \ref{tbl:results} prikazuje rezultate evaluacije algoritma nad Facebook i Orkut skupovima podataka za PA i ER modele. Prikazani udjeli lažnih pozitiva ($F^+$) i lažnih negativa ($F^-$). Algoritam je ispitivan s različitim brojevima slučajnih šetnji ($R$). Kao što je vidljivo iz tablice, udjeli lažnih negativa i pozitiva vrlo su niski, što svjedoči o kvaliteti rezultata algoritma.
 
 \chapter{Zaključak} \label{ch:conclusion}
-U ovom radu obrađen je algoritam za obranu od sybil napada temeljen na slučajnim šetnjama i algoritamskim svojstvima grafova. Algoritam se sastoji od dva osnovna dijela, pronalaska sybil čvorova i sybil grupa koje ih okružuju. Algoritam se pokazao veoma učinkovitim i brzim prilikom testiranja na dva skupa podataka iz stvarnog svijeta.
+Sybil napadi dobro su poznata vrsta napada u distribuiranim sustavima poput senzorskih i peer-to-peer mreža. U osnovnom obliku ovog napada napadač stvara velik broj lažnih identiteta preko kojih utječe na ponašanje napadnutog sustava. Društvene mreže su vrlo česta meta sybil napada. Zaštita od sybil napada na društvenim mrežama temelji se na algoritamskim svojstvima grafova društvenih mreža putem kojih se računa razina povjerenja koja se može pridijeliti proizvonjnom čvoru grafa.
+
+U ovom radu obrađen je algoritam za obranu od sybil napada \textit{sybil defender} predstavljen u \cite{sybil-defender-old} i \cite{sybil-defender}. Algoritam se temelji na slučajnim šetnjama i algoritamskim svojstvima grafova. Algoritam se sastoji od dva osnovna dijela, pronalaska sybil čvorova i sybil grupa koje ih okružuju. Teorijska pozadina algoritma leži u slučajnim šetnjama i pretostavkama o brzom miješanju grafa.
+
+Algoritam se pokazao veoma učinkovitim i brzim prilikom testiranja na stvarnim skupovima podataka različitih veličina i oblika iz društvenih mreža \textit{Facebook} i \textit{Orkut}.
 
 \bibliography{literatura}
 \bibliographystyle{fer}
 
 \begin{sazetak}
-  Sybil napad je napad kojim se pokušava srušiti sustav reputacije stvaranjem lažnih identiteta u peer-to-peer mrežama koji djeluju na slican način. Društvene mreže su vrlo česta meta sybil napada. Zaštita od sybil napada na društevnim mrežama temelji se na algoritamskim svojstvima grafova društevnih mreža putem kojih se računa razina povjerenja koja se može pridijeliti proizvoljnom čvoru grafa.
+  Sybil napad je napad kojim se pokušava srušiti sustav reputacije stvaranjem lažnih identiteta u peer-to-peer mrežama koji djeluju na sličan način. Društvene mreže su vrlo česta meta sybil napada. Zaštita od sybil napada na društevnim mrežama temelji se na algoritamskim svojstvima grafova društevnih mreža putem kojih se računa razina povjerenja koja se može pridijeliti proizvoljnom čvoru grafa. U ovom radu obrađen je algoritam \textit{sybil defender} koji se temelji na slučajnim šetnjama i algoritamskim svojstvima grafova. Algoritam se pokazao veoma učinkovitim i brzim prilikom testiranja na stvarnim skupovima podataka.
 
-  \kljucnerijeci{društvene mreže, sybil napad, teorija grafova, sigurnost podataka, idenditet}
+  \kljucnerijeci{društvene mreže, sybil napad, teorija grafova, \textit{sybil defender}}
 \end{sazetak}
 
 \end{document}
